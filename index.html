@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ko Yoruba - Kids Learning Game</title>
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #fff8e7;
+  text-align: center;
+  color: #333;
+}
+header {
+  background: #008751;
+  color: white;
+  padding: 20px;
+}
+h1 { margin: 0; }
+main { padding: 20px; }
+.card {
+  background: white;
+  border-radius: 20px;
+  padding: 20px;
+  margin: 15px auto;
+  max-width: 450px;
+  box-shadow: 0 4px 10px #ddd;
+}
+button {
+  background: #ffb703;
+  border: none;
+  border-radius: 12px;
+  padding: 15px;
+  margin: 6px;
+  font-size: 18px;
+  cursor: pointer;
+}
+button:active { transform: scale(0.95); }
+.letter {
+  font-size: 75px;
+  color: #008751;
+  font-weight: bold;
+}
+#score { font-size: 20px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🎉 Kọ́ Yorùbá</h1>
+  <p>Learn Yoruba the fun way!</p>
+</header>
+
+<main>
+  <div class="card">
+    <h2>Learn Yoruba Letters</h2>
+    <div class="letter" id="letter">A</div>
+    <h2 id="word">Àgùntàn</h2>
+    <p id="meaning">Sheep</p>
+    <button onclick="speak()">🔊 Listen</button>
+    <button onclick="nextLetter()">Next ➡️</button>
+  </div>
+
+  <div class="card">
+    <h2>🎮 Yoruba Quiz</h2>
+    <p id="question">What is "Omi" in English?</p>
+    <div id="answers"></div>
+    <p id="result"></p>
+    <p id="score">⭐ Score: 0</p>
+  </div>
+</main>
+
+<script>
+const letters = [
+  ["A", "Àgùntàn", "Sheep"],
+  ["B", "Bàtà", "Shoes"],
+  ["D", "Dòdò", "Plantain"],
+  ["E", "Ẹja", "Fish"],
+  ["F", "Fìlà", "Cap"],
+  ["G", "Gọ́ọ̀bù", "Globe"],
+  ["I", "Ìwé", "Book"],
+  ["J", "Jẹun", "Eat"],
+  ["K", "Kẹ̀kẹ́", "Bicycle"],
+  ["L", "Lẹ́tà", "Letter"],
+  ["M", "Mọ́tò", "Car"],
+  ["O", "Omi", "Water"],
+  ["Ọ", "Ọmọ", "Child"],
+  ["P", "Pẹ̀lẹ́", "Gently"],
+  ["R", "Rírìn", "Walking"],
+  ["S", "Sùúrù", "Patience"],
+  ["T", "Tábìlì", "Table"],
+  ["U", "Ujú", "Face"],
+  ["W", "Wẹ̀", "Wash"],
+  ["Y", "Yàn", "Choose"]
+];
+
+let current = 0;
+let score = 0;
+
+function showLetter() {
+  document.getElementById("letter").textContent = letters[current][0];
+  document.getElementById("word").textContent = letters[current][1];
+  document.getElementById("meaning").textContent = letters[current][2];
+}
+
+function nextLetter() {
+  current = (current + 1) % letters.length;
+  showLetter();
+}
+
+function speak() {
+  const text = letters[current][1];
+  const speech = new SpeechSynthesisUtterance(text);
+  speech.lang = "yo-NG";
+  speechSynthesis.speak(speech);
+}
+
+const questions = [
+  {
+    question: 'What is "Omi" in English?',
+    answers: ["Water", "Food", "House"],
+    correct: "Water"
+  },
+  {
+    question: 'What is "Ilé" in English?',
+    answers: ["House", "Car", "Book"],
+    correct: "House"
+  },
+  {
+    question: 'What is "Ọmọ" in English?',
+    answers: ["Child", "Water", "Fish"],
+    correct: "Child"
+  },
+  {
+    question: 'What is "Ẹja" in English?',
+    answers: ["Fish", "Dog", "Cat"],
+    correct: "Fish"
+  }
+];
+
+let q = 0;
+
+function showQuestion() {
+  const question = questions[q];
+  document.getElementById("question").textContent = question.question;
+  const answers = document.getElementById("answers");
+  answers.innerHTML = "";
+
+  question.answers.forEach(answer => {
+    const button = document.createElement("button");
+    button.textContent = answer;
+    button.onclick = () => checkAnswer(answer);
+    answers.appendChild(button);
+  });
+}
+
+function checkAnswer(answer) {
+  const question = questions[q];
+
+  if (answer === question.correct) {
+    score += 10;
+    document.getElementById("result").textContent = "🎉 Correct! Ẹ kú oríire!";
+  } else {
+    document.getElementById("result").textContent = "Try again! O lè ṣe é!";
+  }
+
+  document.getElementById("score").textContent = "⭐ Score: " + score;
+  q = (q + 1) % questions.length;
+  setTimeout(showQuestion, 1500);
+}
+
+showLetter();
+showQuestion();
+</script>
+
+</body>
+</html>
